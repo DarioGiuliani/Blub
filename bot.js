@@ -1,12 +1,9 @@
 const discord = require('discord.js');
 const client = new discord.Client();
-const auth = require('./auth.json');
 const ytdl = require('ytdl-core');
 
-client.login(auth.token);
-
 client.on('ready', () => {
-    console.log(`Ingelogd als ${client.user.tag}! Best bot!!!`);
+    console.log(`Ingelogd als ${client.user.tag}!`);
 })
 
 client.on('message', async message => {
@@ -26,4 +23,6 @@ client.on('message', async message => {
         message.reply('bye');
     }
 });
+
+client.login(process.env.BOT_TOKEN);
 
