@@ -6,7 +6,7 @@ const ytdl = require('ytdl-core');
 client.login(auth.token);
 
 client.on('ready', () => {
-    console.log(`Ingelogd als ${client.user.tag}!`);
+    console.log(`Ingelogd als ${client.user.tag}! Best bot!!!`);
 })
 
 client.on('message', async message => {
