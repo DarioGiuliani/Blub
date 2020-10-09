@@ -1,0 +1,29 @@
+{
+    "prefix": "!",
+    "tag": [
+        {
+            "id": "Tank",
+            "colour": "#00C5FF"
+        },
+        {
+            "id": "Assassin",
+            "colour": "#01AE22"
+        },
+        {
+            "id": "Support",
+            "colour": "#FF7F00"
+        },
+        {
+            "id": "Marksman",
+            "colour": "#FFE300" 
+        },
+        {
+            "id": "Mage",
+            "colour": "#6635FF"
+        },
+        {
+            "id": "Fighter",
+            "colour": "#F30000"
+        }
+    ]
+}

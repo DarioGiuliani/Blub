@@ -1,28 +1,38 @@
+"use strict";
+
 const discord = require('discord.js');
 const client = new discord.Client();
-const ytdl = require('ytdl-core');
+const {prefix, tag} = require('./config.json');
+const auth = require('./auth.json');
+const champions = require('./champion.json');
+const Util = require('./util');
 
 client.on('ready', () => {
     console.log(`Ingelogd als ${client.user.tag}!`);
 })
 
 client.on('message', async message => {
-    if (!message.guild) return;
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    if (message.content === '!join') {
-        if (message.member.voice.channel) {
-            const connection = await message.member.voice.channel.join();
-            const dispatcher = connection.play(ytdl('https://www.youtube.com/watch?v=wAPlzt2L7wE', {filter: 'audioonly'}));
-            dispatcher.setVolume(1.0);
-        } else {
-            message.reply('Join a channel first you dummy!');
-        }
-    }
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
 
-    if (message.content === 'hi'){
-        message.reply('bye');
+    switch(command) {
+        case "recruit":
+            message.channel.send(recruitChampion());
+            break;
+        default:
+            message.reply("Not a valid command! Use !help for all commands.");
     }
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(auth.token);
 
+function recruitChampion() {
+    let randomChamp = champions[Math.floor(Math.random() * champions.length)];
+    return new discord.MessageEmbed()
+                .setColor(tag.find(x => x.id === randomChamp.tags[0]).colour)
+                .setTitle(Util.capitalize(randomChamp.id))
+                .setThumbnail(randomChamp.icon)
+                .setDescription(randomChamp.description);
+}
