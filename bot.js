@@ -1,38 +1,28 @@
-"use strict";
-
+const {prefix, tag} = require('./json/config.json');
+const auth = require('./json/auth.json');
+const serviceAccount = require('./json/blub-bot-df6fd-firebase-adminsdk-yajnd-c804938585.json');
+const admin = require('firebase-admin');
+const Router = require('./routing/router');
 const discord = require('discord.js');
 const client = new discord.Client();
-const {prefix, tag} = require('./config.json');
-const auth = require('./auth.json');
-const champions = require('./champion.json');
-const Util = require('./util');
 
 client.on('ready', () => {
     console.log(`Ingelogd als ${client.user.tag}!`);
-})
+});
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://blub-bot-df6fd.firebaseio.com'
+});
 
 client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+    let args = message.content.slice(prefix.length).trim().split(/ +/);
+    let command = args.shift().toLowerCase();
+    const database = admin.firestore();
 
-    switch(command) {
-        case "recruit":
-            message.channel.send(recruitChampion());
-            break;
-        default:
-            message.reply("Not a valid command! Use !help for all commands.");
-    }
+    Router.route(command, message, database);    
 });
 
 client.login(auth.token);
-
-function recruitChampion() {
-    let randomChamp = champions[Math.floor(Math.random() * champions.length)];
-    return new discord.MessageEmbed()
-                .setColor(tag.find(x => x.id === randomChamp.tags[0]).colour)
-                .setTitle(Util.capitalize(randomChamp.id))
-                .setThumbnail(randomChamp.icon)
-                .setDescription(randomChamp.description);
-}
