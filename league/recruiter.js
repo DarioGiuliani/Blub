@@ -40,9 +40,10 @@ class Recruiter {
     // refactor to own class
 
     async checkRecruitmentAllowed() {
+        // 259.200.000 = 3 days in milliseconds
         let snapshot = await this.database.collection('recruited_champions')
                                             .where('memberId', '==', this.message.author.id)
-                                            .where('acquireDate', '>=', (Date.now() - 10000))
+                                            .where('acquireDate', '>=', (Date.now() - 259200000))
                                             .where('acquireDate', '<=', Date.now())
                                             .get();
 
